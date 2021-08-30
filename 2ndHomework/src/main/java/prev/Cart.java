@@ -7,29 +7,28 @@ public class Cart {
     private ProductRepository repository;
     private List<Product> products;
 
-
-    public Cart(ProductRepository repository){
-        this.repository = repository;
+    public Cart(ProductRepository pr) {
+        this.repository = pr;
         this.products = new ArrayList<>();
     }
 
-    public void add(int id){
-        repository.findById(id)
-                .ifPresent(p -> products.add(p));
-
+    public boolean addToCart(int id) {
+        if (repository.findById(id) != null) {
+            products.add(repository.findById(id));
+            return true;
+        }
+        return false;
     }
-    public void remove(int id){
-        products.stream().filter(p -> p.getId() == id)
-                .findFirst()
-                .ifPresent(p -> products.remove(p));
+
+    public boolean removeFromCart(int id) {
+        return products.removeIf(p -> p.getId() == id);
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Cart{" +
-                "repository" + repository +
-                "products=" + products +
+                "pr=" + repository +
+                ", cartProducts=" + products +
                 '}';
     }
-
 }
